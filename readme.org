@@ -25,3 +25,28 @@ Date:   Sat Aug 20 14:35:10 2022 +0800
     first commit
 github.com/zxhoper/echo4imgupload/   <-    [20220820T143755]
 
+** Get day of week
+<2022-08-20 Sat 17:44>--
+
+Output date time
+#+BEGIN_SRC 
+Upload report:
+File 0: up/7980282D-BDA1-453B-9DA8-25F0489D2C76.jpeg OK!
+       => time: 2022:08:20 15:34:37 
+File 1: up/C92E49BC-A90D-4A68-89A8-BD944B44E3B5.jpeg OK!
+       => time: 2022:08:20 15:25:55 
+File 2: up/BABDDB14-5B2C-4613-95C8-6CFD8A4451A1.jpeg OK!
+       => time: 2022:08:20 15:26:11 
+#+END_SRC
+
+1) regular expression => get YYYY MM DD  hh mm
+
+2) use time package => get day of week
+
+3) Out put date-time format string in org style => <2022-08-20 Sat 17:46>
+
+4) Calcule time duration 
+
+
+
+* Next step: Get location information  
