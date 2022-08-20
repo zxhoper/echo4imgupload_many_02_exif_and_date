@@ -1,0 +1,27 @@
+#+TITLE:Write a app in echo4 for upload image
+
+* WorkLog
+** StarProject on git hub
+<2022-08-20 Sat 13:24>--<2022-08-20 Sat 13:28> 4 Minutes
+https://github.com/zxhoper/echo4imgupload
+$ git log
+commit 7068d0419c11af9bf425d3d48af93a8fe68456d2 (HEAD -> master, origin/master)
+Author: 
+Date:   Sat Aug 20 13:26:51 2022 +0800
+
+    first commit
+github.com/zxhoper/echo4imgupload/   <-    [20220820T132920]
+$ 
+
+** Single file upload ok
+<2022-08-20 Sat 13:28>--<2022-08-20 Sat 14:37> 1 Hour,9 Minutes
+$ git log
+commit af124594905a5967aed2958e4aaf824ca0169406 (HEAD -> master, origin/master)
+Author: Zxander Hoper <zxhoper@proton.me>
+Date:   Sat Aug 20 14:35:10 2022 +0800
+
+    Single file uplaod ok
+
+    first commit
+github.com/zxhoper/echo4imgupload/   <-    [20220820T143755]
+
