@@ -1,4 +1,5 @@
-// App for uploading image using echo4
+// App for upload 2 image and calculate time diff
+//    then write to file
 package main
 
 import (
@@ -191,6 +192,8 @@ func upload(c echo.Context) error {
 	resStr += fmt.Sprintf("\n\n 0000-03-1 is %s <br />\n\n", day_of_week(1, 3, 0000))
 
 	resStr += "</p>"
+
+	fmt.Printf("Email: %s\n", email)
 
 	fmt.Println("==============================================================================================")
 	fmt.Println("==============================================================================================")
