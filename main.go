@@ -7,6 +7,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"regexp"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -62,7 +64,7 @@ func upload(c echo.Context) error {
 			return err
 		}
 
-		resStr += fmt.Sprintf("File %d: %s OK!\n", i, dst.Name())
+		resStr += fmt.Sprintf("\n\nFile %d: %s OK!\n", i, dst.Name())
 
 		// FF -- Parse-EXIF ------------------------ ___--\\
 
@@ -91,10 +93,36 @@ func upload(c echo.Context) error {
 		// fmt.Println("Model: " + gjson.Get(jsonString, "Model").String())
 		// fmt.Println("Software: " + gjson.Get(jsonString, "Software").String())
 		// fmt.Println("DateTimeOriginal: " + gjson.Get(jsonString, "DateTimeOriginal").String())
-		fmt.Println("DateTimeOriginal: " + gjson.Get(jsonString, "DateTimeOriginal").String())
-		resStr += fmt.Sprintf("       => time: %s \n", gjson.Get(jsonString, "DateTimeOriginal").String())
+		dtStr := gjson.Get(jsonString, "DateTimeOriginal").String()
+		fmt.Println("DateTimeOriginal: " + dtStr)
+		// => time: 2022:08:20 15:25:55
+		resStr += fmt.Sprintf("       => time: %s \n", dtStr)
 
 		// LL __ Parse-EXIF ________________________ ___--//
+		//Date Time Map
+		dtm := parseDTString(dtStr)
+
+		//<--MAP-->
+		// ==> YYYY 2022
+		// ==> MM 08
+		// ==> DD 20
+		// ==> hh 15
+		// ==> mm 25
+		// ==> ss 55
+
+		fmt.Println("<--MAP-->")
+		for k, v := range dtm {
+			fmt.Println("==>", k, v)
+		}
+
+		YYYY, _ := strconv.Atoi(dtm["YYYY"])
+		MM, _ := strconv.Atoi(dtm["MM"])
+		DD, _ := strconv.Atoi(dtm["DD"])
+		dow := day_of_week(DD, MM, YYYY)
+		// <2022-08-20 Sat 17:46>
+		resStr += fmt.Sprintf("<%s-%s-%s %s %s:%s>",
+			dtm["YYYY"], dtm["MM"], dtm["DD"], dow,
+			dtm["hh"], dtm["mm"])
 
 	}
 	resStr += "</pre></p>"
@@ -109,6 +137,39 @@ func upload(c echo.Context) error {
 	resStr += "</p>"
 
 	return c.HTML(http.StatusOK, fmt.Sprintf(resStr+"<p>Uploaded total  %d files with fields name=%s and email=%s.</p>", len(files), name, email))
+
+}
+
+func parseDTString(dt string) map[string]string {
+	dtmap := make(map[string]string)
+
+	fmt.Println("in parseDTString dt:", dt)
+
+	// FF -- OOO ------------------------ ___--\\
+	// regexp get YYYY MM DD  hh mm
+	// => time: 2022:08:20 15:25:55
+	//rex := regexp.MustCompile(`([0-9]{4}):([0-9]{2}):([0-9]{2}) ([0-9]{2}):([0-9]{2}):([0-9]{2})`)
+	rex := regexp.MustCompile(`([0-9]{4}):([0-9]{2}):([0-9]{2})\s([0-9]{2}):([0-9]{2}):([0-9]{2})`)
+	rslt := rex.FindAllStringSubmatch(dt, -1)
+	for i, m := range rslt {
+		fmt.Println(i, "--")
+		fmt.Printf("Set %d: YYYY: %s\n", i+1, m[1])
+		fmt.Printf("          MM: %s\n", m[2])
+		fmt.Printf("          DD: %s\n", m[3])
+		fmt.Printf("          hh: %s\n", m[4])
+		fmt.Printf("          mm: %s\n", m[5])
+		fmt.Printf("          ss: %s\n", m[6])
+
+		dtmap["YYYY"] = m[1]
+		dtmap["MM"] = m[2]
+		dtmap["DD"] = m[3]
+		dtmap["hh"] = m[4]
+		dtmap["mm"] = m[5]
+		dtmap["ss"] = m[6]
+
+	}
+	return dtmap
+	// LL __ OOO ________________________ ___--//1
 
 }
 
