@@ -206,7 +206,7 @@ func parseDTString(dt string) map[string]string {
 
 	fmt.Println("in parseDTString dt:", dt)
 
-	// FF -- OOO ------------------------ ___--\\
+	// FF -- RexGet-YYYY-MM-DD ------------------------ ___--\\
 	// regexp get YYYY MM DD  hh mm
 	// => time: 2022:08:20 15:25:55
 	//rex := regexp.MustCompile(`([0-9]{4}):([0-9]{2}):([0-9]{2}) ([0-9]{2}):([0-9]{2}):([0-9]{2})`)
@@ -230,7 +230,7 @@ func parseDTString(dt string) map[string]string {
 
 	}
 	return dtmap
-	// LL __ OOO ________________________ ___--//1
+	// LL __ RexGet-YYYY-MM-DD ________________________ ___--//
 
 }
 
