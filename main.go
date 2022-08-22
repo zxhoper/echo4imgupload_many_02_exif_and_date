@@ -56,6 +56,7 @@ func upload(c echo.Context) error {
 
 		if i > 1 {
 			continue
+			// only take two images [0],[1]
 		}
 		src, err := file.Open()
 		if err != nil {
@@ -77,7 +78,7 @@ func upload(c echo.Context) error {
 		}
 
 		resStr += fmt.Sprintf("\n\nFile %d: %s OK!\n", i, dst.Name())
-		images[i] = fmt.Sprintf("%s", dst.Name())
+		images[i] = fmt.Sprintf("%s", file.Filename)
 
 		// FF -- Parse-EXIF ------------------------ ___--\\
 
@@ -149,7 +150,22 @@ func upload(c echo.Context) error {
 
 	duraStr := fmt.Sprintf("%s--%s", timeStamp[0], timeStamp[1])
 
-	timeUsed := timeDiff(duraStr)
+	timeUsed, needswitch := timeDiff(duraStr)
+
+	if needswitch {
+
+		duraStr = fmt.Sprintf("%s--%s", timeStamp[1], timeStamp[0])
+	}
+
+	// git the first date for title use
+	rexp := regexp.MustCompile(`.*([0-9]{4})-([0-9]{2})-([0-9]{2}) [a-zA-Z]{3} [0-9]{2}:[0-9]{2}[> -<]{1,4}[0-9]{4}-[0-9]{2}-[0-9]{2} [a-zA-Z]{3} [0-9]{2}:[0-9]{2}`)
+	result := rexp.FindAllStringSubmatch(duraStr, 1)
+	titleDate := "0000-00-00"
+	for _, m := range result {
+		titleDate = fmt.Sprintf("%s-%s-%s", m[1], m[2], m[3])
+	}
+
+	fmt.Printf("The date for recored title:%s", titleDate)
 
 	resStr += timeUsed
 	resStr += "\n\n"
@@ -160,15 +176,15 @@ func upload(c echo.Context) error {
 	// FF -- Write-to-File ------------------------ ___--\\
 
 	filename := "public/sf.org"
-	text := fmt.Sprintf("\n\n** %s-%s-%s %s: Fa-Study\n",
+	text := fmt.Sprintf("\n** %s-%s-%s %s: Fa-Study\n",
 		sYYYY, sMM, sDD, dow)
 	text += fmt.Sprintf("%s %s\n", duraStr, timeUsed)
 
-	text += fmt.Sprintf("%s\n", name)
+	text += fmt.Sprintf("- %s\n", name)
 
-	text += fmt.Sprintf("%s\n%s\n", images[0], images[1])
+	text += fmt.Sprintf("- %s\n", email)
 
-	text += fmt.Sprintf("%s\n\n", email)
+	text += fmt.Sprintf("- %s\n- %s\n\n", images[0], images[1])
 
 	f, err := os.OpenFile(filename, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
 	if err != nil {
