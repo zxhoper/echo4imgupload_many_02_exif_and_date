@@ -78,7 +78,10 @@ func upload(c echo.Context) error {
 		}
 
 		resStr += fmt.Sprintf("\n\nFile %d: %s OK!\n", i, dst.Name())
+
 		images[i] = fmt.Sprintf("%s", file.Filename)
+
+
 
 		// FF -- Parse-EXIF ------------------------ ___--\\
 
@@ -143,6 +146,7 @@ func upload(c echo.Context) error {
 			dtm["YYYY"], dtm["MM"], dtm["DD"], dow,
 			dtm["hh"], dtm["mm"])
 		resStr += timeStamp[i]
+
 
 	}
 
@@ -225,7 +229,9 @@ func parseDTString(dt string) map[string]string {
 
 	fmt.Println("in parseDTString dt:", dt)
 
+
 	// FF -- RexGet-YYYY-MM-DD ------------------------ ___--\\
+
 	// regexp get YYYY MM DD  hh mm
 	// => time: 2022:08:20 15:25:55
 	//rex := regexp.MustCompile(`([0-9]{4}):([0-9]{2}):([0-9]{2}) ([0-9]{2}):([0-9]{2}):([0-9]{2})`)
@@ -233,12 +239,14 @@ func parseDTString(dt string) map[string]string {
 	rslt := rex.FindAllStringSubmatch(dt, -1)
 	for i, m := range rslt {
 		fmt.Println(i, "--")
+
 		fmt.Printf(" YYYY: %s\n", m[1])
 		fmt.Printf("   MM: %s\n", m[2])
 		fmt.Printf("   DD: %s\n", m[3])
 		fmt.Printf("   hh: %s\n", m[4])
 		fmt.Printf("   mm: %s\n", m[5])
 		fmt.Printf("   ss: %s\n", m[6])
+
 
 		dtmap["YYYY"] = m[1]
 		dtmap["MM"] = m[2]
@@ -249,7 +257,9 @@ func parseDTString(dt string) map[string]string {
 
 	}
 	return dtmap
-	// LL __ RexGet-YYYY-MM-DD ________________________ ___--//
+
+// LL __ RexGet-YYYY-MM-DD ________________________ ___--//
+
 
 }
 
